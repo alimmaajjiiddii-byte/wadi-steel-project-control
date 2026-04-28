@@ -1,41 +1,55 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 
-# تنظیمات ظاهری داشبورد کنترل پروژه
-st.set_page_config(page_title="Wadi Steel Project Control", layout="wide")
+# تنظیمات پیشرفته صفحه
+st.set_page_config(page_title="Wadi Steel Crisis Center", layout="wide")
 
-# استایل اختصاصی برای پرستیژ کاری
+# اعمال تم اختصاصی و فونت حرفه‌ای
 st.markdown("""
     <style>
-    .main { background-color: #0b0d10; }
-    .stMetric { background-color: #1c2128; border-left: 5px solid #00ffcc; border-radius: 5px; padding: 15px; }
-    h1 { color: #00ffcc; font-family: 'Tahoma'; }
+    .main { background-color: #0e1117; color: white; }
+    .stMetric { background-color: #1a1d23; border: 1px solid #30363d; border-radius: 15px; padding: 20px; }
+    [data-testid="stHeader"] { background: rgba(0,0,0,0); }
     </style>
     """, unsafe_allow_html=True)
 
-# عنوان اصلی داشبورد
-st.title("📊 سیستم جامع کنترل پروژه وادی استیل")
-st.subheader("واحد برنامه‌ریزی و کنترل پروژه - تحلیل انحرافات استراتژیک")
+# هدر اصلی با پرستیژ بالا
+col_logo, col_title = st.columns([1, 4])
+with col_title:
+    st.title("🛡️ سامانه پایش استراتژیک وادی استیل")
+    st.write("تحلیلگر ارشد بحران: **علی** | واحد کنترل پروژه")
+
+# --- بخش شاخص‌های عقربه‌ای (بسیار حرفه‌ای) ---
+st.write("### 🚨 تحلیل وضعیت راندمان و بحران (Crisis Gauge)")
+col1, col2 = st.columns(2)
+
+with col1:
+    # نمودار عقربه‌ای برای EEF
+    fig_eef = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = 0.25,
+        title = {'text': "شاخص بهره‌وری (EEF)"},
+        gauge = {'axis': {'range': [0, 1]},
+                 'bar': {'color': "red"},
+                 'steps': [
+                     {'range': [0, 0.4], 'color': "maroon"},
+                     {'range': [0.4, 0.7], 'color': "orange"},
+                     {'range': [0.7, 1], 'color': "green"}]}))
+    st.plotly_chart(fig_eef, use_container_width=True)
+
+with col2:
+    # وضعیت انحراف هزینه
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.metric("انحراف هزینه (CV)", "-518.32 h", "-12% بحرانی", delta_color="inverse")
+    st.error("تحلیل کارشناس: انحراف فعلی ناشی از تأخیر در تأمین تجهیزات بخش اسکادا است.")
+
+# --- جدول جزئیات تسک‌ها ---
 st.write("---")
-
-# منوی کناری
-st.sidebar.header("پنل کنترلی")
-view_mode = st.sidebar.selectbox("انتخاب لایه گزارش:", ["داشبورد مدیریتی", "تحلیل شاخص‌های زمانی و هزینه‌ای"])
-
-if view_mode == "داشبورد مدیریتی":
-    st.write("### 🚨 شاخص‌های کلیدی عملکرد (KPIs)")
-    
-    col1, col2, col3 = st.columns(3)
-    # نمایش CV و EEF با برچسب‌های استاندارد کنترل پروژه
-    col1.metric("انحراف هزینه (CV)", "-518.32 h", "بحرانی")
-    col2.metric("شاخص بهره‌وری (EEF)", "0.25", "-75%")
-    col3.metric("تأخیر تخمینی (FDE)", "14 روز", "نیاز به اقدام")
-
-    st.error("وضعیت پروژه: خارج از محدوده راندمان تعریف شده. نیاز به بازبینی منابع.")
-
-else:
-    st.write("### 📉 تحلیل روند انحرافات (Variance Analysis)")
-    st.info("این نمودار نشان‌دهنده افت راندمان تیم نسبت به خط مبنا (Baseline) است.")
-    # نمودار خطی برای نشان دادن روند
-    st.line_chart([0.95, 0.80, 0.55, 0.25])
-    st.write("**تحلیل کارشناس کنترل پروژه:** روند نزولی راندمان از هفته سوم شدت گرفته است.")
+with st.expander("🔍 مشاهده جزئیات انحراف فعالیت‌های پروژه"):
+    data = {
+        "فعالیت": ["نصب سنسورها", "شبکه‌سازی", "کانفیگ نرم‌افزار"],
+        "انحراف (ساعت)": [-494.5, -23.8, 0],
+        "وضعیت": ["🔥 بحرانی", "⚠️ اخطار", "✅ مطابق برنامه"]
+    }
+    st.table(pd.DataFrame(data))
