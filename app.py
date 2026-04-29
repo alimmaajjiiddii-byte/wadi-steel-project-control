@@ -29,8 +29,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. آدرس وب‌هوک میک.کام (لینک خودت را اینجا بگذار)
-MAKE_API_URL = "لینک_وب‌هوک_خودت_را_اینجا_پیست_کن"
+# 2. آدرس وب‌هوک میک.کام (لینک شما جایگذاری شد)
+MAKE_API_URL = "https://hook.eu1.make.com/r8ihcn7jgpdp73wljeviquvb8rgkqhib"
 
 # 3. موتور دریافت داده با کش هوشمند
 @st.cache_data(ttl=30) # رفرش هر 30 ثانیه
